@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+/* Importer Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Ajouter ton propre CSS ici */
+/* public/css/style.css */
+/* @import './style.css'; */
+
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
