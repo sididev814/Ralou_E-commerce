@@ -45,4 +45,20 @@ class CommandeController extends Controller
 
         return view('mespages.confirmation', compact('commande'));
     }
+    // 3. Validation de commande (seulement si paiement simulé)
+public function validerCommande(Request $request)
+{
+    if (!session('paiement_ok')) {
+        return redirect()->back()->with('error', 'Veuillez effectuer un paiement avant de valider votre commande.');
+    }
+
+    // Ici tu peux insérer les données de la commande en BDD si besoin
+    // $commande = Commande::create([...]);
+
+    session()->forget('paiement_ok'); // Réinitialiser après commande
+    session()->forget('panier'); // Vider le panier après validation
+
+    return redirect()->route('commandes')->with('success', 'Commande validée avec succès.');
+}
+
 }

@@ -69,6 +69,9 @@
                 </tr>
                 <tr>
     <td colspan="5">
+        <!-- Paiement MyNita -->
+<tr>
+    <td colspan="5">
         <h5>💳 Informations de paiement MyNita</h5>
         <form method="POST" action="{{ route('paiement.simuler') }}" class="row g-2">
             @csrf
@@ -93,14 +96,20 @@
     </td>
 </tr>
 
-            </tbody>
-        </table>
-
-        <!-- Formulaire de validation de commande -->
+<!-- Bouton Valider la commande -->
+<tr>
+    <td colspan="5">
         <form action="{{ route('valider.commande') }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-success">✅ Valider la commande</button>
+            <button type="submit" class="btn btn-success" {{ session('paiement_ok') ? '' : 'disabled' }}>
+                ✅ Valider la commande
+            </button>
+            @if (!session('paiement_ok'))
+                <p class="text-danger mt-2">💡 Effectuez d'abord le paiement pour valider votre commande.</p>
+            @endif
         </form>
+    </td>
+</tr>
 
     @else
         <p class="text-muted">Votre panier est vide.</p>
