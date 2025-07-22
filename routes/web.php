@@ -9,6 +9,7 @@ use App\Http\Controllers\CategorieProduitController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PaiementController;
 /*
 |--------------------------------------------------------------------------
 | Page d’accueil
@@ -56,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/retirer-du-panier/{id}', [PanierController::class, 'retirer'])->name('panier.retirer');
     Route::delete('/panier/supprimer/{id}', [PanierController::class, 'supprimerDuPanier'])->name('supprimer.panier');
     Route::post('/panier/valider', [PanierController::class, 'validerCommande'])->name('valider.commande');
-
+    Route::post('/paiement/simuler', [PaiementController::class, 'simuler'])->name('paiement.simuler');
     // Compte utilisateur
     Route::get('/compte', function () {
         return view('mespages.compte');

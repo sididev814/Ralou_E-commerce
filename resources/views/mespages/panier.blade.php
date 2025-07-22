@@ -67,6 +67,32 @@
                     <td colspan="3" class="text-end"><strong>Total :</strong></td>
                     <td colspan="2"><strong>{{ $total }} MAD</strong></td>
                 </tr>
+                <tr>
+    <td colspan="5">
+        <h5>💳 Informations de paiement MyNita</h5>
+        <form method="POST" action="{{ route('paiement.simuler') }}" class="row g-2">
+            @csrf
+            <div class="col-md-4">
+                <input type="text" name="telephone" class="form-control" placeholder="Téléphone" required>
+            </div>
+            <div class="col-md-3">
+                <select name="operateur" class="form-select" required>
+                    <option value="">-- Opérateur --</option>
+                    <option value="Moov">Moov</option>
+                    <option value="Airtel">Airtel</option>
+                    <option value="Zamani">Zamani</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" name="montant" class="form-control" value="{{ $total }}" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-warning">Payer maintenant</button>
+            </div>
+        </form>
+    </td>
+</tr>
+
             </tbody>
         </table>
 
