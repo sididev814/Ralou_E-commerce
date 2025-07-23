@@ -20,7 +20,7 @@
     <h1>🛒 Mon Panier</h1>
 
     @if (session()->has('panier') && count(session('panier')) > 0)
-        <table class="table table-bordered">
+        <table class="table">
             <thead class="table-light">
                 <tr>
                     <th>Produit</th>
@@ -37,16 +37,14 @@
                     <tr>
                         <td>{{ $details['nom'] }}</td>
                         <td class="d-flex align-items-center">
-                            <!-- Diminuer -->
-                            <form action="{{ route('panier.retirer', $id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('panier.retirer', $id) }}" method="POST" class="me-2">
                                 @csrf
                                 <button class="btn btn-sm btn-outline-secondary" type="submit">-</button>
                             </form>
 
-                            <span class="mx-2">{{ $details['quantite'] }}</span>
+                            <span>{{ $details['quantite'] }}</span>
 
-                            <!-- Augmenter -->
-                            <form action="{{ route('ajouter.panier', $id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('ajouter.panier', $id) }}" method="POST" class="ms-2">
                                 @csrf
                                 <button class="btn btn-sm btn-outline-secondary" type="submit">+</button>
                             </form>
@@ -67,49 +65,64 @@
                     <td colspan="3" class="text-end"><strong>Total :</strong></td>
                     <td colspan="2"><strong>{{ $total }} MAD</strong></td>
                 </tr>
-                <tr>
-    <td colspan="5">
-        <!-- Paiement MyNita -->
-<tr>
-    <td colspan="5">
-        <h5>💳 Informations de paiement MyNita</h5>
-        <form method="POST" action="{{ route('paiement.simuler') }}" class="row g-2">
-            @csrf
-            <div class="col-md-4">
-                <input type="text" name="telephone" class="form-control" placeholder="Téléphone" required>
-            </div>
-            <div class="col-md-3">
-                <select name="operateur" class="form-select" required>
-                    <option value="">-- Opérateur --</option>
-                    <option value="Moov">Moov</option>
-                    <option value="Airtel">Airtel</option>
-                    <option value="Zamani">Zamani</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <input type="number" name="montant" class="form-control" value="{{ $total }}" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-warning">Payer maintenant</button>
-            </div>
-        </form>
-    </td>
-</tr>
+            </tbody>
+        </table>
 
-<!-- Bouton Valider la commande -->
-<tr>
-    <td colspan="5">
-        <form action="{{ route('valider.commande') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-success" {{ session('paiement_ok') ? '' : 'disabled' }}>
-                ✅ Valider la commande
+        <!-- Boutons en dehors du tableau -->
+        <div class="d-flex justify-content-between mt-4">
+            <!-- Bouton Valider commande -->
+            <!-- <form action="{{ route('valider.commande') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-success" {{ session('paiement_effectue') ? '' : 'disabled' }}>
+                    ✅ Valider la commande
+                </button>
+                @if (!session('paiement_effectue'))
+                    <small class="text-danger ms-2">💡 Faites d'abord le paiement.</small>
+                @endif
+            </form> -->
+
+            <!-- Bouton Paiement -->
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#paiementModal">
+                💳 Payer maintenant
             </button>
-            @if (!session('paiement_ok'))
-                <p class="text-danger mt-2">💡 Effectuez d'abord le paiement pour valider votre commande.</p>
-            @endif
-        </form>
-    </td>
-</tr>
+        </div>
+
+        <!-- Modal Bootstrap pour paiement -->
+        <div class="modal fade" id="paiementModal" tabindex="-1" aria-labelledby="paiementModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <form method="POST" action="{{ route('paiement.simuler') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="paiementModalLabel">Informations de Paiement Mobile Money</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="telephone">Numéro de téléphone</label>
+                            <input type="text" name="telephone" class="form-control" placeholder="Ex: 90909090" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="operateur">Opérateur Mobile Money</label>
+                            <select name="operateur" class="form-select" required>
+                                <option value="">-- Sélectionner --</option>
+                                <option value="OrangeMoney">Orange Money</option>
+                                <option value="Airtel">Airtel Money</option>
+                                <option value="Moov">Moov Money</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="montant">Montant</label>
+                            <input type="number" name="montant" class="form-control" value="{{ $total }}" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">✅ Confirmer le paiement</button>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
 
     @else
         <p class="text-muted">Votre panier est vide.</p>

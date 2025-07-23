@@ -98,6 +98,18 @@
     footer a:hover {
         text-decoration: underline;
     }
+    html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
 
     /* Bouton WhatsApp flottant */
     .whatsapp-float {
