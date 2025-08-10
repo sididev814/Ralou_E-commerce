@@ -68,29 +68,16 @@
             </tbody>
         </table>
 
-        <!-- Boutons en dehors du tableau -->
         <div class="d-flex justify-content-between mt-4">
-            <!-- Bouton Valider commande -->
-            <!-- <form action="{{ route('valider.commande') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-success" {{ session('paiement_effectue') ? '' : 'disabled' }}>
-                    ✅ Valider la commande
-                </button>
-                @if (!session('paiement_effectue'))
-                    <small class="text-danger ms-2">💡 Faites d'abord le paiement.</small>
-                @endif
-            </form> -->
-
-            <!-- Bouton Paiement -->
             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#paiementModal">
                 💳 Payer maintenant
             </button>
         </div>
 
-        <!-- Modal Bootstrap pour paiement -->
+        <!-- Modal Bootstrap pour paiement CinetPay -->
         <div class="modal fade" id="paiementModal" tabindex="-1" aria-labelledby="paiementModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
-            <form method="POST" action="{{ route('paiement.simuler') }}">
+            <form method="POST" action="{{ route('paiement.initier') }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -111,10 +98,7 @@
                                 <option value="Moov">Moov Money</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="montant">Montant</label>
-                            <input type="number" name="montant" class="form-control" value="{{ $total }}" readonly>
-                        </div>
+                        {{-- Le montant sera calculé côté serveur --}}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">✅ Confirmer le paiement</button>

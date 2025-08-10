@@ -5,7 +5,7 @@
 @section('content')
 <div class="container py-4">
 
-     @if(session('success'))
+    @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td><strong>Date :</strong></td>
-            <td>{{ $commande->created_at->format('d/m/Y à H:i') }}</td>
+            <td>{{ $commande->created_at ? $commande->created_at->format('d/m/Y à H:i') : 'Non disponible' }}</td>
         </tr>
         <tr>
             <td><strong>Total :</strong></td>
@@ -40,15 +40,19 @@
 
     {{-- Produits --}}
     <h5 class="mt-4 mb-2">🛍️ Produits commandés :</h5>
-    <ul class="list-group list-group-flush mb-3">
-        @foreach ($commande->produits as $produit)
-            <li class="list-group-item py-2 px-3">
-                {{ $produit->nom }} — 
-                {{ $produit->pivot->quantite }} x 
-                {{ number_format($produit->pivot->prix_unitaire, 2, '.', ' ') }} MAD
-            </li>
-        @endforeach
-    </ul>
+    @if ($commande->produits->count() > 0)
+        <ul class="list-group list-group-flush mb-3">
+            @foreach ($commande->produits as $produit)
+                <li class="list-group-item py-2 px-3">
+                    {{ $produit->nom }} — 
+                    {{ $produit->pivot->quantite }} x 
+                    {{ number_format($produit->pivot->prix_unitaire, 2, '.', ' ') }} MAD
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p class="text-muted">Aucun produit trouvé pour cette commande.</p>
+    @endif
 
     {{-- Boutons --}}
     <div class="mt-3">
@@ -56,7 +60,7 @@
             <i class="bi bi-box-arrow-left me-1"></i>Retour aux produits
         </a>
         <a href="{{ route('commandes') }}" class="btn btn-secondary btn-sm">
-            <i class="bi bi-receipt me-1"></i>voir mes commandes
+            <i class="bi bi-receipt me-1"></i>Voir mes commandes
         </a>
     </div>
 

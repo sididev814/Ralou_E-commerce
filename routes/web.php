@@ -10,6 +10,7 @@ use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaiementController;
+
 /*
 |--------------------------------------------------------------------------
 | Page d’accueil
@@ -46,6 +47,15 @@ Route::view('/mentions-legales', 'mespages.mentions')->name('mentions');
 Route::view('/contact', 'mespages.contact')->name('contact');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+/*
+|--------------------------------------------------------------------------
+| Routes de paiement CinetPay (Accessible sans Auth pour le webhook)
+|--------------------------------------------------------------------------
+*/
+Route::post('/paiement/notification', [PaiementController::class, 'notification'])->name('paiement.notification'); // Webhook (CinetPay)
+Route::get('/paiement/retour', [PaiementController::class, 'retour'])->name('paiement.retour'); // Retour utilisateur après paiement
+
 /*
 |--------------------------------------------------------------------------
 | Routes protégées (authentifiés)
@@ -57,7 +67,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/retirer-du-panier/{id}', [PanierController::class, 'retirer'])->name('panier.retirer');
     Route::delete('/panier/supprimer/{id}', [PanierController::class, 'supprimerDuPanier'])->name('supprimer.panier');
     Route::post('/panier/valider', [PanierController::class, 'validerCommande'])->name('valider.commande');
-    Route::post('/paiement/simuler', [PaiementController::class, 'simuler'])->name('paiement.simuler');
+
+    // Démarrage du Paiement CinetPay (Doit être connecté)
+    Route::post('/paiement/initier', [PaiementController::class, 'initier'])->name('paiement.initier');
+
     // Compte utilisateur
     Route::get('/compte', function () {
         return view('mespages.compte');
