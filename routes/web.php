@@ -10,6 +10,7 @@ use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\ProfilController;  // Import du ProfilController
 
 /*
 |--------------------------------------------------------------------------
@@ -50,15 +51,15 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 
 /*
 |--------------------------------------------------------------------------
-| Routes de paiement CinetPay (Accessible sans Auth pour le webhook)
+| Routes de paiement CinetPay (accessible sans auth pour webhook)
 |--------------------------------------------------------------------------
 */
-Route::post('/paiement/notification', [PaiementController::class, 'notification'])->name('paiement.notification'); // Webhook (CinetPay)
-Route::get('/paiement/retour', [PaiementController::class, 'retour'])->name('paiement.retour'); // Retour utilisateur après paiement
+Route::post('/paiement/notification', [PaiementController::class, 'notification'])->name('paiement.notification'); // Webhook CinetPay
+Route::get('/paiement/retour', [PaiementController::class, 'retour'])->name('paiement.retour'); // Retour utilisateur
 
 /*
 |--------------------------------------------------------------------------
-| Routes protégées (authentifiés)
+| Routes protégées (authentifiées)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
@@ -68,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/panier/supprimer/{id}', [PanierController::class, 'supprimerDuPanier'])->name('supprimer.panier');
     Route::post('/panier/valider', [PanierController::class, 'validerCommande'])->name('valider.commande');
 
-    // Démarrage du Paiement CinetPay (Doit être connecté)
+    // Paiement (doit être connecté)
     Route::post('/paiement/initier', [PaiementController::class, 'initier'])->name('paiement.initier');
 
     // Compte utilisateur
@@ -79,6 +80,10 @@ Route::middleware(['auth'])->group(function () {
     // Commandes
     Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes');
     Route::get('/commande/confirmation/{id}', [CommandeController::class, 'confirmation'])->name('commande.confirmation');
+
+    // Modification profil utilisateur
+    Route::get('/profil/modifier', [ProfilController::class, 'edit'])->name('profil.edit');
+    Route::put('/profil/modifier', [ProfilController::class, 'update'])->name('profil.update');
 });
 
 /*
@@ -87,7 +92,7 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
+    // Dashboard admin
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // CRUD Produits
@@ -108,4 +113,8 @@ Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->name('admin.')-
 
     // Liste des commandes
     Route::get('/commandes', [CommandeController::class, 'adminIndex'])->name('commandes.index');
+
+    // ** Routes modification profil admin **
+    Route::get('/profil/edit', [App\Http\Controllers\Admin\ProfilController::class, 'edit'])->name('profil.edit');
+    Route::put('/profil/edit', [App\Http\Controllers\Admin\ProfilController::class, 'update'])->name('profil.update');
 });

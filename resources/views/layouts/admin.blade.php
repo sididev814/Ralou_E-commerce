@@ -89,10 +89,42 @@
 
     <!-- Content Area -->
     <div class="content-area">
-        <div class="topbar d-flex justify-content-between align-items-center">
-            <span><i class="fa fa-user-circle me-2"></i> Bienvenue, {{ Auth::user()->name }}</span>
-            <span class="text-muted small">Admin</span>
-        </div>
+       <div class="topbar d-flex justify-content-between align-items-center">
+    <span><i class="fa fa-user-circle me-2"></i> Bienvenue, {{ Auth::user()->name }}</span>
+
+    <div style="position: relative;">
+        <span style="cursor:pointer; color: #6c757d;" id="adminLabel">Admin</span>
+        <a href="{{ route('admin.profil.edit') }}" id="profilLink"
+           style="position: absolute; top: 120%; right: 0; background: white; border: 1px solid #ccc; padding: 5px 10px; display: none; text-decoration: none; color: #0d6efd; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); white-space: nowrap;">
+             Profil
+        </a>
+    </div>
+</div>
+
+<script>
+    const adminLabel = document.getElementById('adminLabel');
+    const profilLink = document.getElementById('profilLink');
+
+    adminLabel.addEventListener('mouseenter', () => {
+        profilLink.style.display = 'inline-block';
+    });
+    adminLabel.addEventListener('mouseleave', () => {
+        // on donne un délai pour que le curseur puisse aller sur le lien
+        setTimeout(() => {
+            if (!profilLink.matches(':hover') && !adminLabel.matches(':hover')) {
+                profilLink.style.display = 'none';
+            }
+        }, 200);
+    });
+
+    profilLink.addEventListener('mouseleave', () => {
+        profilLink.style.display = 'none';
+    });
+    profilLink.addEventListener('mouseenter', () => {
+        profilLink.style.display = 'inline-block';
+    });
+</script>
+
 
         <div class="main-content">
             @yield('content')
