@@ -8,11 +8,25 @@ use Illuminate\Support\Facades\Storage;
 
 class ProduitController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produits = Produit::all();
+        $query = Produit::query();
+
+        if ($request->has('categorie')) {
+            $query->where('categorie_produit_id', $request->categorie);
+        }
+
+        $produits = $query->get();
+
         return view('mespages.produits', compact('produits'));
     }
+           public function parCategorie($id)
+{
+    $categorie = CategorieProduit::findOrFail($id);
+    $produits = Produit::where('categorie_produit_id', $id)->get();
+
+    return view('mespages.produits', compact('produits', 'categorie'));
+}
 
     public function detail($id)
     {

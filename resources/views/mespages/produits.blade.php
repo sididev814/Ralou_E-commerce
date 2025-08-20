@@ -8,10 +8,12 @@
             <div class="col-md-4">
                 <a href="{{ route('produits.detail', $produit->id) }}" style="text-decoration: none; color: inherit; width: 100%;">
                     <div class="card h-100" style="width: 100%;">
-                        <img src="{{ asset('images/' . $produit->image) }}" 
-                             class="card-img-top" 
-                             alt="Image produit" 
-                             style="height: 380px; object-fit: cover;">
+                        {{-- Cadre fixe pour image avec centrage --}}
+                        <div style="height: 380px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img src="{{ asset('images/' . $produit->image) }}" 
+                                 alt="Image produit" 
+                                 style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ $produit->nom }}</h5>
                             <p class="card-text">{{ $produit->description }}</p>
